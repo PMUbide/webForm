@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datos>
+	<Persona id="1">
+		<DNI> 11111A </DNI>
+		<Nombre> Rosana </Nombre>
+		<Provincia> 50 </Provincia>
+	</Persona>
+	<Persona id="2">
+		<DNI> 222222A </DNI>
+		<Nombre> Fernando </Nombre>
+		<Provincia> 50 </Provincia>
+	</Persona>
+	<Persona id="3">
+		<DNI> 333333A </DNI>
+		<Nombre> Susana </Nombre>
+		<Provincia> 40 </Provincia>
+	</Persona>
+	<Provincia id="50">
+		<nomProvincia>Zaragoza </nomProvincia>
+	</Provincia>
+	<Provincia id="22">
+		<nomProvincia>Huesca</nomProvincia>
+	</Provincia>
+</Datos>
