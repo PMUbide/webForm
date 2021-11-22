@@ -18,12 +18,9 @@ using System.Text;
 
 public partial class carga_volcado : System.Web.UI.Page
 {
-    String cadenaConexion = "Database='practica_xml'; DataSource='localhost'; User Id='root'; Password=''";
+    String cadenaConexion = "Database='practica_xml'; DataSource='localhost'; User Id='root'; Password=''; AllowLoadLocalInfile=True";
     protected void Page_Load(object sender, EventArgs e)
     {
-
-
-
 
 
     }
@@ -51,7 +48,7 @@ public partial class carga_volcado : System.Web.UI.Page
 
     }
 
-    //vuelca con csv y bulk
+    //vuelca con csv temporal y hace el bulkLoader
     protected void convierteCSV(object sender, EventArgs e)
     {
 
@@ -69,44 +66,42 @@ public partial class carga_volcado : System.Web.UI.Page
             sb.AppendLine(string.Join("\t", fields));
         }
 
-        File.WriteAllText(Server.MapPath("~/datos/csvFile.csv"), sb.ToString());
+        string tempCsvFileSpec = Server.MapPath("~/datos/csvFile.csv");
 
-        //string tempCsvFileSpec = @"C:\dam_pablo\actividadMier\practica\practica\datos\csvFile.csv";
+        File.WriteAllText(tempCsvFileSpec, sb.ToString());
+
 
         using (MySqlConnection conexionBD = new MySqlConnection(this.cadenaConexion))
         { 
             var bl = new MySqlBulkLoader(conexionBD)
             {
-                Local = true,
+                FileName = Server.MapPath("~/datos/csvFile.csv"),
                 TableName = "persona",
-                Timeout = 600,
-                FieldTerminator = "\t",
+                CharacterSet = "UTF8",
+                NumberOfLinesToSkip = 1,
                 LineTerminator = "\n",
-                FileName = Server.MapPath("~/datos/XMLFile.xml"),
-                NumberOfLinesToSkip = 1
+                FieldTerminator = "\t",
+                Local = true,
+                Timeout = 600
             };
-            var numberOfInsertedRows = bl.Load();
 
+            var rowCount = bl.Load();
 
-            /*bl.Local = true;
-            bl.TableName = "persona";
-            bl.FieldTerminator = "\t";
-            bl.LineTerminator = "\n";
-            bl.FileName = Server.MapPath("~/datos/XMLFile.xml");
-            bl.NumberOfLinesToSkip = 1;
-            int count = bl.Load();
-            System.IO.File.Delete(tempCsvFileSpec);*/
-        
-        
+            mensaje.ForeColor = System.Drawing.Color.Black;
+            mensaje.Text = "Insertadas " + rowCount + " líneas de datos";
+
+            //Borrar archivo temporal
+            System.IO.File.Delete(tempCsvFileSpec);
+            
+            
+
         }
-
-
 
     }
 
 
 
-
+    //Otro método que podría servir para el volcado
     protected void vuelcaXML(object sender, EventArgs e)
     {
         try
@@ -127,10 +122,10 @@ public partial class carga_volcado : System.Web.UI.Page
                         {
                             myCmd.CommandType = CommandType.Text;
                             myCmd.Parameters.Clear();
-                            myCmd.Parameters.AddWithValue("@id", fila[3]);
                             myCmd.Parameters.AddWithValue("@DNI", fila[0].ToString());
                             myCmd.Parameters.AddWithValue("@Nombre", fila[1].ToString());
                             myCmd.Parameters.AddWithValue("@Provincia", fila[2].ToString());
+                            myCmd.Parameters.AddWithValue("@id", fila[3]);
                             myCmd.ExecuteNonQuery();
                         }
                         //inserting items

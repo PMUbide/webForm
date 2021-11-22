@@ -6,6 +6,14 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
+
+    <style>
+        .textbox{
+            width: 250px;
+        }
+
+    </style>
+
 </head>
 <body>
     <form id="form1" runat="server">
@@ -14,7 +22,7 @@
               
               <asp:Button ID="botonVolcar" runat="server" OnClick="convierteCSV" text="Vuelca XML"/>
            
-              <asp:TextBox ID="mensaje" runat="server"></asp:TextBox>
+              <asp:TextBox ID="mensaje" runat="server" CssClass="textbox"></asp:TextBox>
 
         </div>
     </form>
